@@ -1,5 +1,7 @@
 # enableIf.scala
 
+[![Build Status](https://travis-ci.org/ThoughtWorksInc/enableIf.scala.svg?branch=master)](https://travis-ci.org/ThoughtWorksInc/enableIf.scala)
+
 **enableIf.scala** is a library that enables and disables Scala code at compile-time, like `#if` in C/C++.
 
 ## Motivation
