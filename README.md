@@ -45,3 +45,7 @@ assert(tenPlusOne.result == 11)
 For Scala 2.10, the expression `scala.util.Properties.versionNumberString.startsWith("2.10.")` is evaluated to `true`, hence the `FlatMapForTailRec` definition will be enabled. As a result, `ten.flatMap` will call to `flatMap` of the implicit class `FlatMapForTailRec`.
 
 For Scala 2.11, the expression `scala.util.Properties.versionNumberString.startsWith("2.10.")` is evaluated to `false`, hence the `FlatMapForTailRec` definition will be disabled. As a result, `ten.flatMap` will call the native `TailRec.flatmap`.
+
+## Limitation
+
+The `enableIf` annotation does not work for top level traits, classes and objects.
