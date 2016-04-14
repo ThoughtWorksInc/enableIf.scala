@@ -18,3 +18,7 @@ project/plugins/project/
 
 # IntelliJ IDEA
 .idea/
+
+# Files created for deployment
+secret/
+local.sbt

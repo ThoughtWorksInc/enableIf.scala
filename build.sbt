@@ -19,3 +19,11 @@ libraryDependencies ++= {
 }
 
 crossScalaVersions := Seq("2.10.6", "2.11.8")
+
+releaseProcess := {
+  releaseProcess.value.patch(releaseProcess.value.indexOf(pushChanges), Seq[ReleaseStep](releaseStepCommand("sonatypeRelease")), 0)
+}
+
+releaseProcess -= runClean
+
+releaseProcess -= runTest
