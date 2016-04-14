@@ -31,7 +31,7 @@ implicit class FlatMapForTailRec[A](underlying: TailRec[A]) {
 }
 ```
 
-The `@enableIf` annotation accepts a `Boolean` expression that indicate if the `FlatMapForTailRec` definition should be compiled. The `Boolean` expression is evaluated at compile-time instead of run-time.
+The `@enableIf` annotation accepts a `Boolean` expression that indicates if the `FlatMapForTailRec` definition should be compiled. The `Boolean` expression is evaluated at compile-time instead of run-time.
 
 ### Step 3: Call the `flatMap` method on your `TailRec`
 
