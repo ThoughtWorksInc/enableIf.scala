@@ -15,6 +15,8 @@ With the help of this library, I can create my own implementation of `flatMap` f
 ### Step 1: Add the library dependency in your `build.sbt`
 
 ```
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+
 libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "latest.release"
 ```
 
@@ -85,3 +87,5 @@ optimizedBuffer += 3
 // resolved to native ArrayBuffer.reduceToSize for JVM, implicitly converted to ReduceToSizeOps for Scala.js
 optimizedBuffer.reduceToSize(1)
 ```
+
+You can define a `c` parameter because the `enableIf` annotation accepts either a `Boolean` expression or a `scala.reflect.macros.Context => Boolean` function. You can extract information from the macro context `c`.
