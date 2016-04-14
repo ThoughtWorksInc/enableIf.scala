@@ -44,6 +44,8 @@ developers in ThisBuild := List(
   )
 )
 
+import ReleaseTransformations._
+
 releaseProcess := {
   releaseProcess.value.patch(releaseProcess.value.indexOf(pushChanges), Seq[ReleaseStep](releaseStepCommand("sonatypeRelease")), 0)
 }
