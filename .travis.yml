@@ -23,6 +23,5 @@ deploy:
   provider: script
   script: ./deploy.sh
   on:
-    jdk: openjdk7
     condition: -e ./deploy.sh
     all_branches: true
