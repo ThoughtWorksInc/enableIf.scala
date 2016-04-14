@@ -49,3 +49,39 @@ For Scala 2.11, the expression `scala.util.Properties.versionNumberString.starts
 ## Limitation
 
 The `enableIf` annotation does not work for top level traits, classes and objects.
+
+## Enable different code for Scala.js and JVM targets
+
+Suppose you want to create a Buffer-like collection, you may want create an `scala.collection.mutable.ArrayBuffer` for JVM target, and the native `js.Array` for Scala.js target.
+
+``` scala
+private object Jvm {
+  @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+  def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
+}
+
+private object Js {
+  @inline
+  @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+  def newBuffer[A] = new scalajs.js.Array[A]
+
+  @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
+  @inline
+  implicit final class ReduceToSizeOps[A] @inline()(array: scalajs.js.Array[A]) {
+    @inline def reduceToSize(newSize: Int) = array.length = newSize
+  }
+
+}
+
+import Js._
+import Jvm._
+
+val optimizedBuffer = newBuffer[Int]
+
+optimizedBuffer += 1
+optimizedBuffer += 2
+optimizedBuffer += 3
+
+// resolved to native ArrayBuffer.reduceToSize for JVM, implicitly converted to ReduceToSizeOps for Scala.js
+optimizedBuffer.reduceToSize(1)
+```
