@@ -54,7 +54,7 @@ The `enableIf` annotation does not work for top level traits, classes and object
 
 ## Enable different code for Scala.js and JVM targets
 
-Suppose you want to create a Buffer-like collection, you may want create an `scala.collection.mutable.ArrayBuffer` for JVM target, and the native `js.Array` for Scala.js target.
+Suppose you want to create a Buffer-like collection, you may want create an `ArrayBuffer` for JVM target, and the native `js.Array` for Scala.js target.
 
 ``` scala
 private object Jvm {
