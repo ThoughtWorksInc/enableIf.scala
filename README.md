@@ -8,7 +8,7 @@
 
 Suppose you want to create a library for both Scala 2.10 and Scala 2.11. When you implement the library, you may want to call [the `flatMap` method on `TailRec`](http://www.scala-lang.org/api/current/scala/util/control/TailCalls$$TailRec.html). However, the method does not exist on Scala 2.10.
 
-With the help of this library, I can create my own implementation of `flatMap` for Scala 2.10 target, and the Scala 2.11 target should still use the `flatMap` method implemented by Scala standard library.
+With the help of this library, You can create my own implementation of `flatMap` for Scala 2.10 target, and the Scala 2.11 target should still use the `flatMap` method implemented by Scala standard library.
 
 ## Usage
 
