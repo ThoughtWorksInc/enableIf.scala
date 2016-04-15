@@ -58,15 +58,27 @@ Suppose you want to create a Buffer-like collection, you may want create an `sca
 
 ``` scala
 private object Jvm {
+  
+  /**
+   * Enable if no Scala.js plugin is found (i.e. Normal JVM target)
+   */
   @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
+  
 }
 
 private object Js {
+
+  /**
+   * Enable if a Scala.js plugin is found (i.e. Scala.js target)
+   */
   @inline
   @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   def newBuffer[A] = new scalajs.js.Array[A]
 
+  /**
+   * Enable if a Scala.js plugin is found (i.e. Scala.js target)
+   */
   @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   @inline
   implicit final class ReduceToSizeOps[A] @inline()(array: scalajs.js.Array[A]) {
