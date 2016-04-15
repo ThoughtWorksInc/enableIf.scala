@@ -1,7 +1,7 @@
 package com.thoughtworks
 
 import scala.annotation.StaticAnnotation
-
+import scala.reflect.internal.annotations.compileTimeOnly
 import scala.reflect.macros.Context
 
 object enableIf {
@@ -27,7 +27,10 @@ object enableIf {
 
 }
 
+@compileTimeOnly("enableIf.scala requires macros paradise plugin")
 final class enableIf(condition: Context => Boolean) extends StaticAnnotation {
+
+  throw new AssertionError("enableIf.scala requires macro paradise plugin")
 
   def this(condition: Boolean) = this { _ => condition }
 
