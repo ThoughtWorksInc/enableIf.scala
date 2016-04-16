@@ -73,16 +73,14 @@ private object Js {
   /**
    * Enable if a Scala.js plugin is found (i.e. Scala.js target)
    */
-  @inline
   @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
-  def newBuffer[A] = new scalajs.js.Array[A]
+  @inline def newBuffer[A] = new scalajs.js.Array[A]
 
   /**
    * Enable if a Scala.js plugin is found (i.e. Scala.js target)
    */
   @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
-  @inline
-  implicit final class ReduceToSizeOps[A] @inline()(array: scalajs.js.Array[A]) {
+  @inline implicit final class ReduceToSizeOps[A] @inline()(array: scalajs.js.Array[A]) {
     @inline def reduceToSize(newSize: Int) = array.length = newSize
   }
 
