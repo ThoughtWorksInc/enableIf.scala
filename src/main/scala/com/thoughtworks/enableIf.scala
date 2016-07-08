@@ -13,7 +13,7 @@ object enableIf {
   private[enableIf] object Macros {
     def macroTransform(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
       import c.universe._
-      val Apply(Select(Apply(_, List(condition)), _), List(_)) = c.macroApplication
+      val Apply(Select(Apply(_, List(condition)), _), List(_@_*)) = c.macroApplication
       if (c.eval(c.Expr[Boolean](
         q"""
           _root_.com.thoughtworks.enableIf.isEnabled(${reify(c).tree}, $condition)
