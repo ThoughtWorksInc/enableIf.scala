@@ -1,15 +1,14 @@
 package com.thoughtworks
 
-import utest._
+import org.scalatest._
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object EnableMembersIfTest extends TestSuite {
+object EnableMembersIfTest extends FreeSpec with Matchers {
 
-  def tests = this {
 
-    "Boolean condition" - {
+    "Boolean condition" in {
 
       @enableMembersIf(true)
       object ShouldEnable {
@@ -26,7 +25,7 @@ object EnableMembersIfTest extends TestSuite {
 
     }
 
-    "Boolean condition on Class" - {
+    "Boolean condition on Class" in {
 
       @enableMembersIf(false)
       class ShouldDisableClassOnly
@@ -45,5 +44,3 @@ object EnableMembersIfTest extends TestSuite {
 
     }
   }
-
-}

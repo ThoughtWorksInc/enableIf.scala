@@ -6,7 +6,7 @@ addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.fu
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-libraryDependencies += "com.lihaoyi" %% "utest" % "0.4.3" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.0" % Test
 
 testFrameworks += new TestFramework("utest.runner.Framework")
 
@@ -20,7 +20,7 @@ libraryDependencies ++= {
 
 releaseCrossBuild := true
 
-crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-M3")
+crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-M5")
 
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
