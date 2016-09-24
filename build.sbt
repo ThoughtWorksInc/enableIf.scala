@@ -20,7 +20,12 @@ libraryDependencies ++= {
 
 releaseCrossBuild := true
 
-crossScalaVersions := Seq("2.10.6", "2.11.8", "2.12.0-RC1")
+crossScalaVersions := Seq(
+  "2.10.6",
+  "2.11.8"
+  // Don't build on 2.12.0-RC1 because ScalaTags did not support 2.12.0-RC1 yet
+  // "2.12.0-RC1"
+)
 
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 
