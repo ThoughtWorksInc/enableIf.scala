@@ -58,28 +58,25 @@ The `enableIf` annotation does not work for top level traits, classes and object
 Suppose you want to create a Buffer-like collection, you may want create an `ArrayBuffer` for JVM target, and the native `js.Array` for Scala.js target.
 
 ``` scala
+/**
+ * Enable members in `Jvm` if no Scala.js plugin is found (i.e. Normal JVM target)
+ */
+@enableMembersIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
 private object Jvm {
   
-  /**
-   * Enable if no Scala.js plugin is found (i.e. Normal JVM target)
-   */
-  @enableIf(c => !c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   def newBuffer[A] = collection.mutable.ArrayBuffer.empty[A]
   
 }
 
+
+/**
+ * Enable members in `Js` if a Scala.js plugin is found (i.e. Scala.js target)
+ */
+@enableMembersIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
 private object Js {
 
-  /**
-   * Enable if a Scala.js plugin is found (i.e. Scala.js target)
-   */
-  @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   @inline def newBuffer[A] = new scalajs.js.Array[A]
 
-  /**
-   * Enable if a Scala.js plugin is found (i.e. Scala.js target)
-   */
-  @enableIf(c => c.compilerSettings.exists(_.matches("""^-Xplugin:.*scalajs-compiler_[0-9\.\-]*\.jar$""")))
   @inline implicit final class ReduceToSizeOps[A] @inline()(array: scalajs.js.Array[A]) {
     @inline def reduceToSize(newSize: Int) = array.length = newSize
   }
