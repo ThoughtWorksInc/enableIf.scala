@@ -2,6 +2,7 @@
 
 [![Join the chat at https://gitter.im/ThoughtWorksInc/enableIf.scala](https://badges.gitter.im/ThoughtWorksInc/enableIf.scala.svg)](https://gitter.im/ThoughtWorksInc/enableIf.scala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ThoughtWorksInc/enableIf.scala.svg)](https://travis-ci.org/ThoughtWorksInc/enableIf.scala)
+[![Latest version](https://index.scala-lang.org/thoughtworksinc/enableif.scala/enableif/latest.svg)](https://index.scala-lang.org/thoughtworksinc/enableif.scala)
 
 **enableIf.scala** is a library that switches Scala code at compile-time, like `#if` in C/C++.
 
