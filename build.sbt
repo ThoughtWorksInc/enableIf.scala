@@ -2,13 +2,27 @@ organization := "com.thoughtworks.enableIf"
 
 name := "enableIf"
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Nil
+  } else {
+    Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}
+
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Seq("-Ymacro-annotations")
+  } else {
+    Nil
+  }
+}
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.5-M1" % Test
-
-testFrameworks += new TestFramework("utest.runner.Framework")
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % Test
 
 libraryDependencies ++= {
   if (scalaBinaryVersion.value == "2.10") {
@@ -18,6 +32,6 @@ libraryDependencies ++= {
   }
 }
 
-crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.6", "2.13.0-M3")
+crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.6", "2.13.0-M4")
 
 startYear := Some(2016)
