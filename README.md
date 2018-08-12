@@ -17,8 +17,26 @@ With the help of this library, You can create your own implementation of `flatMa
 
 ### Step 1: Add the library dependency in your `build.sbt`
 
-```
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+``` sbt
+// Enable macro annotation by scalac flags for Scala 2.13
+scalacOptions ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Seq("-Ymacro-annotations")
+  } else {
+    Nil
+  }
+}
+
+// Enable macro annotation by compiler plugins for Scala 2.12
+libraryDependencies ++= {
+  import Ordering.Implicits._
+  if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
+    Nil
+  } else {
+    Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+  }
+}
 
 libraryDependencies += "com.thoughtworks.enableIf" %% "enableif" % "latest.release"
 ```
