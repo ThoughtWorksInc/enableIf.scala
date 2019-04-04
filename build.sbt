@@ -22,7 +22,7 @@ scalacOptions ++= {
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.6-SNAP1" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.7" % Test
 
 libraryDependencies ++= {
   if (scalaBinaryVersion.value == "2.10") {
