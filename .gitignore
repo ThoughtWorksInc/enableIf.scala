@@ -22,3 +22,4 @@ project/plugins/project/
 # Files created for deployment
 secret/
 local.sbt
+secret/
