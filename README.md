@@ -71,7 +71,9 @@ For Scala 2.11, the expression `scala.util.Properties.versionNumberString.starts
 
 ## Limitation
 
-The `enableIf` annotation does not work for top level traits, classes and objects.
+ * The `enableIf` annotation does not work for top level traits, classes and objects.
+ * The boolean condition been evaluated must refer `class`s or `object`s via fully quantified names from dependency libraries
+ * The boolean condition been evaluated must not refer other `class`s or `object`s from the same library.
 
 ## Enable different code for Scala.js and JVM targets
 
