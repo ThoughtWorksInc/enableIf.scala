@@ -1,11 +1,13 @@
 package com.thoughtworks
 
 import org.scalatest._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object EnableMembersIfTest extends FreeSpec with Matchers {
+object EnableMembersIfTest extends AnyFreeSpec with Matchers {
 
 
     "Boolean condition" in {

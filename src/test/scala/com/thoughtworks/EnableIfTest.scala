@@ -4,11 +4,13 @@ import org.scalatest._
 import enableIf._
 
 import scala.util.control.TailCalls._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object EnableIfTest extends FreeSpec with Matchers {
+object EnableIfTest extends AnyFreeSpec with Matchers {
 
 
   "Boolean condition" in {
