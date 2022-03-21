@@ -7,7 +7,11 @@ libraryDependencies ++= {
   if (VersionNumber(scalaVersion.value).numbers >= Seq(2L, 13L)) {
     Nil
   } else {
-    Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full))
+    Seq(
+      compilerPlugin(
+        "org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full
+      )
+    )
   }
 }
 
@@ -22,7 +26,7 @@ scalacOptions ++= {
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.4" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test
 
 libraryDependencies ++= {
   if (scalaBinaryVersion.value == "2.10") {
