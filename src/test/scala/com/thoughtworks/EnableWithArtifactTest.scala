@@ -17,9 +17,18 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
     object ShouldEnable {
 
-      @enableWithArtifact("scala-library", scala.util.Properties.versionNumberString)
+      @enableWithArtifact("scala", scala.util.Properties.versionNumberString)
       def whichIsEnabled = "good"
 
+      /**
+       * sbt is using the self-managed scala library, that's why we are using
+       * `scala` as artifactId and `2.12.15` as the version string
+       * eg. $HOME/.sbt/boot/scala-2.12.15/lib/scala-library.jar
+       *
+       * For most usages of enableWithArtifact, 3rd-party libraries should be used
+       */
+      @enableWithArtifact("scala-library", scala.util.Properties.versionNumberString)
+      def whichIsEnabled = "good"
     }
     object ShouldDisable {
 
