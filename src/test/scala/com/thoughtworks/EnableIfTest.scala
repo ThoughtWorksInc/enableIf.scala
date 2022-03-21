@@ -7,11 +7,10 @@ import scala.util.control.TailCalls._
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
-/**
-  * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
+/** @author
+  *   杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
 class EnableIfTest extends AnyFreeSpec with Matchers {
-
 
   "Boolean condition" in {
 
@@ -54,9 +53,7 @@ class EnableIfTest extends AnyFreeSpec with Matchers {
     import ShouldDisable._
     assert(whichIsEnabled.innerMethod == "good")
 
-
   }
-
 
   "Add TailRec.flatMap for Scala 2.10 " in {
 
