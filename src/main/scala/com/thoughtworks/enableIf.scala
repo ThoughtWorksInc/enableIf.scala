@@ -16,9 +16,13 @@ object enableIf {
       import c.universe._
       val Apply(Select(Apply(_, List(condition)), _), List(_ @_*)) =
         c.macroApplication
-      if (c.eval(c.Expr[Boolean](q"""
-          _root_.com.thoughtworks.enableIf.isEnabled(${reify(c).tree}, $condition)
-        """))) {
+      if (
+        c.eval(c.Expr[Boolean](q"""
+          _root_.com.thoughtworks.enableIf.isEnabled(${reify(
+            c
+          ).tree}, $condition)
+        """))
+      ) {
         c.Expr(q"..${annottees.map(_.tree)}")
       } else {
         c.Expr(EmptyTree)
