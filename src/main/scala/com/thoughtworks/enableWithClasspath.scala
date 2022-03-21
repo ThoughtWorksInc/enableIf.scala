@@ -15,7 +15,7 @@ object enableWithClasspath {
 
   def checkClasspathRegex(c: Context, regex: Regex): Boolean = {
     c.classPath.exists(
-      _.getPath.matches(regex.regex)
+      _.getPath.matches(regex.toString)
     )
   }
 

@@ -10,13 +10,14 @@ object enableWithArtifact {
 
   def checkArtifact(c: Context, artifactId: String, regex: Regex): Boolean = {
     c.classPath.exists(
-      _.getPath.matches(s".*${artifactId}-${regex.regex}")
+      _.getPath.matches(s".*${artifactId}-${regex.toString}")
     )
   }
 
   def checkArtifact(c: Context, artifactId: String, version: String): Boolean = {
+    val versionRegex = version.replace(".", "\\.")
     c.classPath.exists(
-      _.getPath.matches(s".*${artifactId}-${version.replace(".", "\\.")}.*")
+      _.getPath.matches(s".*${artifactId}-${versionRegex}.*")
     )
   }
 
@@ -42,7 +43,7 @@ object enableWithArtifact {
 final class enableWithArtifact(artifactId: String, regex: Regex) extends StaticAnnotation {
   throw new AssertionError("enableWithArtifact.scala requires macro paradise plugin")
 
-  def this(artifactId: String, regex: String) = this(artifactId, new Regex(regex))
+  def this(artifactId: String, version: String) = this(artifactId, new Regex(version.replace(".", "\\.")))
 
   import scala.language.experimental.macros
 
