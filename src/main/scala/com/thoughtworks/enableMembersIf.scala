@@ -12,20 +12,25 @@ object enableMembersIf {
       import c.universe._
       def constructors(body: List[Tree]): List[Tree] = {
         (for {
-          constructor@DefDef(_, nme.CONSTRUCTOR, _, _, _, _) <- body.view
+          constructor @ DefDef(_, nme.CONSTRUCTOR, _, _, _, _) <- body.view
         } yield constructor).take(1).toList
       }
 
-      val Apply(Select(Apply(_, List(condition)), _), List(_@_*)) = c.macroApplication
-      if (c.eval(c.Expr[Boolean](
-        q"""
+      val Apply(Select(Apply(_, List(condition)), _), List(_ @_*)) =
+        c.macroApplication
+      if (c.eval(c.Expr[Boolean](q"""
           _root_.com.thoughtworks.enableIf.isEnabled(${reify(c).tree}, $condition)
         """))) {
         c.Expr(q"..${annottees.map(_.tree)}")
       } else {
         val head = annottees.head.tree match {
           case ClassDef(mods, name, tparams, Template(parents, self, body)) =>
-            ClassDef(mods, name, tparams, Template(parents, self, constructors(body)))
+            ClassDef(
+              mods,
+              name,
+              tparams,
+              Template(parents, self, constructors(body))
+            )
           case ModuleDef(mods, name, Template(parents, self, body)) =>
             ModuleDef(mods, name, Template(parents, self, constructors(body)))
         }
@@ -38,7 +43,8 @@ object enableMembersIf {
 }
 
 @compileTimeOnly("enableIf.scala requires macros paradise plugin")
-final class enableMembersIf(condition: Context => Boolean) extends StaticAnnotation {
+final class enableMembersIf(condition: Context => Boolean)
+    extends StaticAnnotation {
 
   throw new AssertionError("enableIf.scala requires macro paradise plugin")
 
@@ -46,6 +52,7 @@ final class enableMembersIf(condition: Context => Boolean) extends StaticAnnotat
 
   import scala.language.experimental.macros
 
-  def macroTransform(annottees: Any*): Any = macro enableMembersIf.Macros.macroTransform
+  def macroTransform(annottees: Any*): Any =
+    macro enableMembersIf.Macros.macroTransform
 
 }
