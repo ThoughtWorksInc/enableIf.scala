@@ -7,7 +7,7 @@ import org.scalatest.matchers.should.Matchers
 /**
   * @author 杨博 (Yang Bo) &lt;pop.atry@gmail.com&gt;
   */
-object EnableMembersIfTest extends AnyFreeSpec with Matchers {
+class EnableMembersIfTest extends AnyFreeSpec with Matchers {
 
 
     "Boolean condition" in {
