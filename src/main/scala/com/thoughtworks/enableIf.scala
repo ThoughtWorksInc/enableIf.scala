@@ -3,8 +3,33 @@ package com.thoughtworks
 import scala.annotation.StaticAnnotation
 import scala.reflect.internal.annotations.compileTimeOnly
 import scala.reflect.macros.Context
+import scala.util.matching.Regex
 
 object enableIf {
+  def hasArtifactInClasspath(artifactId: String, regex: Regex)(c: Context): Boolean = {
+    c.classPath.exists(
+      _.getPath.matches(s".*${artifactId}-${regex.toString}")
+    )
+  }
+
+  def hasArtifactInClasspath(artifactId: String, version: String)(c: Context): Boolean = {
+    val versionRegex = version.replace(".", "\\.")
+    c.classPath.exists(
+      _.getPath.matches(s".*${artifactId}-${versionRegex}.*")
+    )
+  }
+
+  def hasRegexInClasspath(regex: String): Context => Boolean = {
+    c => c.classPath.exists(
+      _.getPath.matches(regex)
+    )
+  }
+
+  def hasRegexInClasspath(regex: Regex): Context => Boolean = {
+    c => c.classPath.exists(
+      _.getPath.matches(regex.toString)
+    )
+  }
 
   def isEnabled(c: Context, booleanCondition: Boolean) = booleanCondition
 

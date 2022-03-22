@@ -17,7 +17,7 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
     object ShouldEnable {
 
-      @enableWithArtifact("scala", scala.util.Properties.versionNumberString)
+      @enableIf(c => hasArtifactInClasspath("scala", scala.util.Properties.versionNumberString)(c))
       def whichIsEnabled = "good"
 
       /**
@@ -27,12 +27,12 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
        *
        * For most usages of enableWithArtifact, 3rd-party libraries should be used
        */
-      @enableWithArtifact("scala-library", scala.util.Properties.versionNumberString)
+      @enableIf(c => hasArtifactInClasspath("scala-library", scala.util.Properties.versionNumberString)(c))
       def whichIsEnabled = "good"
     }
     object ShouldDisable {
 
-      @enableWithArtifact("scala-library", "0.0.0")
+      @enableIf(c => hasArtifactInClasspath("scala-library", "0.0.0")(c))
       def whichIsEnabled = "bad"
     }
 
@@ -44,7 +44,7 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
   "Add TailRec.flatMap for Scala 2.10 " in {
 
-    @enableWithArtifact("scala-library", "2\\.10.*".r)
+    @enableIf(hasArtifactInClasspath("scala-library", "2\\.10.*".r))
     implicit class FlatMapForTailRec[A](underlying: TailRec[A]) {
       final def flatMap[B](f: A => TailRec[B]): TailRec[B] = {
         tailcall(f(underlying.result))

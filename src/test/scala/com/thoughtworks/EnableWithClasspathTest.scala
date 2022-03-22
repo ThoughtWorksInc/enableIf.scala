@@ -17,13 +17,13 @@ class EnableWithClasspathTest extends AnyFreeSpec with Matchers {
 
     object ShouldEnable {
 
-      @enableWithClasspath(".*scala.*".r)
+      @enableIf(hasRegexInClasspath(".*scala.*".r))
       def whichIsEnabled = "good"
 
     }
     object ShouldDisable {
 
-      @enableWithClasspath(".*should_not_exist.*".r)
+      @enableIf(hasRegexInClasspath(".*should_not_exist.*".r))
       def whichIsEnabled = "bad"
     }
 
@@ -35,7 +35,7 @@ class EnableWithClasspathTest extends AnyFreeSpec with Matchers {
 
   "Add TailRec.flatMap for Scala 2.10 " in {
 
-    @enableWithClasspath(".*scala-library-2.10.*")
+    @enableIf(hasRegexInClasspath(".*scala-library-2.10.*"))
     implicit class FlatMapForTailRec[A](underlying: TailRec[A]) {
       final def flatMap[B](f: A => TailRec[B]): TailRec[B] = {
         tailcall(f(underlying.result))
