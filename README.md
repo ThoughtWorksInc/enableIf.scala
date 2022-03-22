@@ -13,6 +13,14 @@ Suppose you want to create a library for both Scala 2.10 and Scala 2.11. When yo
 
 With the help of this library, You can create your own implementation of `flatMap` for Scala 2.10 target, and the Scala 2.11 target should still use the `flatMap` method implemented by Scala standard library.
 
+## Macros
+| Name | Description |
+|------|-------------|
+| @enableIf | switches single member via predicates |
+| @enableMembersIf | switches all members via predicates |
+| @enableWithClasspath | switches single member via classpath regex |
+| @enableWithArtifact | switches single member via artifactId and version |
+
 ## Usage
 
 ### Step 1: Add the library dependency in your `build.sbt`
@@ -119,3 +127,48 @@ optimizedBuffer.reduceToSize(1)
 ```
 
 You can define a `c` parameter because the `enableIf` annotation accepts either a `Boolean` expression or a `scala.reflect.macros.Context => Boolean` function. You can extract information from the macro context `c`.
+
+## Enable different code for Apache Spark 3.1.x and 3.2.x
+For breaking API changes of 3rd-party libraries, simply annotate the target method with the artifactId and the version to make it compatible.
+
+Sometimes, we need to use the regex to match the rest part of a dependency's classpath. For example, `"3\\.2.*".r` below will match `"3.2.0.jar"`.
+``` scala
+object XYZ {
+  @enableWithArtifact("spark-catalyst_2.12", "3\\.2.*".r)
+  private def getFuncName(f: UnresolvedFunction): String = {
+    // For Spark 3.2.x
+    f.nameParts.last
+  }
+  
+  @enableWithArtifact("spark-catalyst_2.12", "3\\.1.*".r)
+  private def getFuncName(f: UnresolvedFunction): String = {
+    // For Spark 3.1.x
+    f.name.funcName
+  }
+}
+```
+
+The rest part regex could also be used to identify classifiers. Take `"org.bytedeco" % "ffmpeg" % "5.0-1.5.7"` for example:
+
+```
+ffmpeg-5.0-1.5.7-android-arm-gpl.jar
+ffmpeg-5.0-1.5.7-android-arm.jar
+ffmpeg-5.0-1.5.7-android-arm64.jar
+ffmpeg-5.0-1.5.7-linux-arm64-gpl.jar
+...
+```
+
+If there is a key difference between gpl and non-gpl implementation, the following macro might be used:
+```
+@enableWithArtifact("ffmpeg", "5.0-1.5.7-.*-gpl.jar")
+```
+
+If `@enableWithArtifact` is not flexible enough for you to identify the specific dependency, please use `@enableWithClasspath`.
+
+Hints to show the full classpath:
+```
+sbt "show Compile / fullClasspath"
+
+mill show foo.compileClasspath
+```
+
