@@ -159,14 +159,14 @@ ffmpeg-5.0-1.5.7-linux-arm64-gpl.jar
 ```
 
 If there is a key difference between gpl and non-gpl implementation, the following macro might be used:
-```
+``` scala
 @enableWithArtifact("ffmpeg", "5.0-1.5.7-.*-gpl.jar")
 ```
 
 If `@enableWithArtifact` is not flexible enough for you to identify the specific dependency, please use `@enableWithClasspath`.
 
 Hints to show the full classpath:
-```
+``` bash
 sbt "show Compile / fullClasspath"
 
 mill show foo.compileClasspath
