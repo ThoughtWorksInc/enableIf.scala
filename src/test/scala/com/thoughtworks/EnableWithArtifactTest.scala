@@ -52,7 +52,11 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
     object ImplicitQ {
       @enableWithArtifact("scala-library", "2\\.1[123]\\..*".r)
       def whichIsEnabled = "bad"
+
+      @enableWithArtifact("scala", "2\\.1[123]\\..*".r)
+      def whichIsEnabled = "bad"
     }
+
 
     import ExplicitQ._
     import ImplicitQ._
