@@ -13,14 +13,6 @@ Suppose you want to create a library for both Scala 2.10 and Scala 2.11. When yo
 
 With the help of this library, You can create your own implementation of `flatMap` for Scala 2.10 target, and the Scala 2.11 target should still use the `flatMap` method implemented by Scala standard library.
 
-## Macros
-| Name | Description |
-|------|-------------|
-| @enableIf | switches single member via predicates |
-| @enableMembersIf | switches all members via predicates |
-| @enableWithClasspath | switches single member via classpath regex |
-| @enableWithArtifact | switches single member via artifactId and version |
-
 ## Usage
 
 ### Step 1: Add the library dependency in your `build.sbt`
@@ -134,13 +126,13 @@ For breaking API changes of 3rd-party libraries, simply annotate the target meth
 Sometimes, we need to use the regex to match the rest part of a dependency's classpath. For example, `"3\\.2.*".r` below will match `"3.2.0.jar"`.
 ``` scala
 object XYZ {
-  @enableWithArtifact("spark-catalyst_2.12", "3\\.2.*".r)
+  @enableIf(classpathMatchesScalaArtifact("spark-catalyst", "3\\.2.*".r))
   private def getFuncName(f: UnresolvedFunction): String = {
     // For Spark 3.2.x
     f.nameParts.last
   }
   
-  @enableWithArtifact("spark-catalyst_2.12", "3\\.1.*".r)
+  @enableIf(classpathMatchesScalaArtifact("spark-catalyst", "3\\.1.*".r))
   private def getFuncName(f: UnresolvedFunction): String = {
     // For Spark 3.1.x
     f.name.funcName
@@ -160,10 +152,10 @@ ffmpeg-5.0-1.5.7-linux-arm64-gpl.jar
 
 If there is a key difference between gpl and non-gpl implementation, the following macro (with casual regex) might be used:
 ``` scala
-@enableWithArtifact("ffmpeg", "5.0-1.5.7-.*-gpl.jar".r)
+@enableIf(classpathMatchesArtifact("ffmpeg", "5.0-1.5.7-.*-gpl.jar".r))
 ```
 
-If `@enableWithArtifact` is not flexible enough for you to identify the specific dependency, please use `@enableWithClasspath`.
+If `classpathMatchesArtifact` or `classpathMatchesScalaArtifact` is not flexible enough for you to identify the specific dependency, please use `classpathMatches`.
 
 Hints to show the full classpath:
 ``` bash
