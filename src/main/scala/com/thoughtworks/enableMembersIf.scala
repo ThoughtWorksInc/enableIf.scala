@@ -3,8 +3,33 @@ package com.thoughtworks
 import scala.annotation.StaticAnnotation
 import scala.reflect.internal.annotations.compileTimeOnly
 import scala.reflect.macros.Context
+import scala.util.matching.Regex
+
 
 object enableMembersIf {
+  def classpathMatches(regex: String): Context => Boolean = {
+    enableIf.classpathMatches(regex)
+  }
+
+  def classpathMatches(regex: Regex): Context => Boolean = {
+    enableIf.classpathMatches(regex)
+  }
+
+  def classpathMatchesArtifact(artifactId: String, regex: Regex): Context => Boolean = {
+    enableIf.classpathMatchesArtifact(artifactId, regex)
+  }
+
+  def classpathMatchesArtifact(artifactId: String, version: String): Context => Boolean = {
+    enableIf.classpathMatchesArtifact(artifactId, version)
+  }
+
+  def classpathMatchesScalaArtifact(artifactId: String, regex: Regex): Context => Boolean = {
+    enableIf.classpathMatchesScalaArtifact(artifactId, regex)
+  }
+
+  def classpathMatchesScalaArtifact(artifactId: String, version: String): Context => Boolean = {
+    enableIf.classpathMatchesScalaArtifact(artifactId, version)
+  }
 
   private[enableMembersIf] object Macros {
     def macroTransform(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
@@ -20,6 +45,7 @@ object enableMembersIf {
         c.macroApplication
       if (
         c.eval(c.Expr[Boolean](q"""
+          import _root_.com.thoughtworks.enableMembersIf._
           _root_.com.thoughtworks.enableIf.isEnabled(${reify(
             c
           ).tree}, $condition)
