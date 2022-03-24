@@ -16,14 +16,14 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
     object ExplicitQ {
 
-      @enableIf(hasArtifactInClasspath("quasiquotes", "2.1.1"))
+      @enableIf(classpathMatchesScalaArtifact("quasiquotes", "2.1.1"))
       def whichIsEnabled = "good"
     }
     object ImplicitQ {
-      @enableIf(hasArtifactInClasspath("scala-library", "2\\.1[123]\\..*".r))
+      @enableIf(classpathMatchesArtifact("scala-library", "2\\.1[123]\\..*".r))
       def whichIsEnabled = "bad"
 
-      @enableIf(hasArtifactInClasspath("scala", "2\\.1[123]\\..*".r))
+      @enableIf(classpathMatchesArtifact("scala", "2\\.1[123]\\..*".r))
       def whichIsEnabled = "bad"
     }
 
@@ -39,7 +39,7 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
   "Add TailRec.flatMap for Scala 2.10 " in {
 
-    @enableIf(hasArtifactInClasspath("scala-library", "2\\.10.*".r))
+    @enableIf(classpathMatchesArtifact("scala-library", "2\\.10.*".r))
     implicit class FlatMapForTailRec[A](underlying: TailRec[A]) {
       final def flatMap[B](f: A => TailRec[B]): TailRec[B] = {
         tailcall(f(underlying.result))

@@ -5,92 +5,65 @@ import scala.reflect.internal.annotations.compileTimeOnly
 import scala.reflect.macros.Context
 import scala.util.matching.Regex
 
+
 object enableIf {
-  private def getArtifactIds(artifactId: String): (String, String) = {
+  private def getRegex(artifactId: String, regex: Regex): String = {
+    s".*${artifactId}-${regex.toString}"
+  }
+
+  private def getRegex(artifactId: String, version: String): String = {
+    val versionRegex = s"${version.replace(".", "\\.")}.*"
+    getRegex(artifactId, new Regex(versionRegex))
+  }
+
+  private def getScalaRegex(artifactId: String, regex: Regex): String = {
     val scalaMajorVersion = scala.util.Properties.versionNumberString.split("\\.")
       .take(2).mkString(".")
-    val javaAID = artifactId.stripSuffix(scalaMajorVersion)
-    val scalaAID = s"${javaAID}_${scalaMajorVersion}"
-    (javaAID, scalaAID)
+    getRegex(s"${artifactId}_${scalaMajorVersion}", regex)
   }
 
-  private def getRegexList(artifactId: String, regex: Regex): List[String] = {
-    val (javaAID, scalaAID) = getArtifactIds(artifactId)
-    List(s".*${javaAID}-${regex.toString}", s".*${scalaAID}-${regex.toString}")
-  }
-
-  private def getRegexList(artifactId: String, version: String): List[String] = {
+  private def getScalaRegex(artifactId: String, version: String): String = {
     val versionRegex = s"${version.replace(".", "\\.")}.*"
-    getRegexList(artifactId, new Regex(versionRegex))
+    getScalaRegex(artifactId, new Regex(versionRegex))
   }
 
-  def hasArtifactInClasspath(artifactId: String, regex: Regex)(c: Context): Boolean = {
-    getRegexList(artifactId, regex).exists(regex =>
-      hasRegexInClasspath(regex)(c)
-    )
+  def classpathMatches(regex: String): Context => Boolean = {
+    c => c.classPath.exists(_.getPath.matches(regex))
   }
 
-  def hasArtifactInClasspath(artifactId: String, version: String)(c: Context): Boolean = {
-    getRegexList(artifactId, version).exists(regex =>
-      hasRegexInClasspath(regex)(c)
-    )
+  def classpathMatches(regex: Regex): Context => Boolean = {
+    c => c.classPath.exists(_.getPath.matches(regex.toString))
   }
 
-  def hasRegexInClasspath(regex: String): Context => Boolean = {
-    c => c.classPath.exists(
-      _.getPath.matches(regex)
-    )
+  def classpathMatchesArtifact(artifactId: String, regex: Regex): Context => Boolean = {
+    classpathMatches(getRegex(artifactId, regex))
   }
 
-  def hasRegexInClasspath(regex: Regex): Context => Boolean = {
-    c => c.classPath.exists(
-      _.getPath.matches(regex.toString)
-    )
+  def classpathMatchesArtifact(artifactId: String, version: String): Context => Boolean = {
+    classpathMatches(getRegex(artifactId, version))
   }
+
+  def classpathMatchesScalaArtifact(artifactId: String, regex: Regex): Context => Boolean = {
+    classpathMatches(getScalaRegex(artifactId, regex))
+  }
+
+  def classpathMatchesScalaArtifact(artifactId: String, version: String): Context => Boolean = {
+    classpathMatches(getScalaRegex(artifactId, version))
+  }
+
 
   def isEnabled(c: Context, booleanCondition: Boolean) = booleanCondition
 
   def isEnabled(c: Context, functionCondition: Context => Boolean) =
     functionCondition(c)
 
-  private def evalHasRegexInClassPath(regexStr: String)(c: Context): Boolean = {
-    import c.universe._
-    val regex = Literal(Constant(regexStr))
-    c.eval(c.Expr[Boolean](q"""
-      _root_.com.thoughtworks.enableIf.hasRegexInClasspath(${regex})(${reify(c).tree})
-    """))
-  }
-
   private[enableIf] object Macros {
     def macroTransform(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
       import c.universe._
-      val Apply(Select(Apply(_, List(origCondition)), _), List(_@_*)) = c.macroApplication
-      val condition = origCondition match {
-        case Apply(Ident(name), List(arg)) if "hasRegexInClasspath".equals(name.decoded) =>
-          val regex: String = arg match {
-            case Select(Tuple2(Literal(Constant(regexStr)), _)) => regexStr.asInstanceOf[String]
-            case Literal(Constant(regexStr)) => regexStr.asInstanceOf[String]
-            case _ =>
-              throw new IllegalArgumentException("hasRegexInClasspath only accepts String/Regex literals")
-          }
-          val result = evalHasRegexInClassPath(regex)(c)
-          Literal(Constant(result))
-        case Apply(Ident(name), List(Literal(Constant(artifactId)), arg)) if "hasArtifactInClasspath".equals(name.decoded) =>
-          val regexes = arg match {
-            case Select(Tuple2(Literal(Constant(regexStr)), _)) =>
-              getRegexList(artifactId.asInstanceOf[String], new Regex(regexStr.asInstanceOf[String]))
-            case Literal(Constant(version)) =>
-              getRegexList(artifactId.asInstanceOf[String], version.asInstanceOf[String])
-            case _ =>
-              throw new IllegalArgumentException("hasArtifactInClasspath only accepts String/Regex literals")
-          }
-          val result = regexes.exists(evalHasRegexInClassPath(_)(c))
-          Literal(Constant(result))
-        case _ =>
-          origCondition
-      }
+      val Apply(Select(Apply(_, List(condition)), _), List(_@_*)) = c.macroApplication
       if (c.eval(c.Expr[Boolean](
         q"""
+          import _root_.com.thoughtworks.enableIf._
           _root_.com.thoughtworks.enableIf.isEnabled(${reify(c).tree}, $condition)
         """))) {
         c.Expr(q"..${annottees.map(_.tree)}")
