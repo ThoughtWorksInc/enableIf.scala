@@ -22,7 +22,7 @@ object enableMembersIf {
         c.macroApplication
       if (
         c.eval(c.Expr[Boolean](q"""
-          import _root_.com.thoughtworks.enableMembersIf._
+          import _root_.com.thoughtworks.enableIf._
           _root_.com.thoughtworks.enableIf.isEnabled(${reify(
             c
           ).tree}, $condition)
