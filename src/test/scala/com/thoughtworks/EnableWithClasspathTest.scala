@@ -35,7 +35,7 @@ class EnableWithClasspathTest extends AnyFreeSpec with Matchers {
 
   "Add TailRec.flatMap for Scala 2.10 " in {
 
-    @enableIf(classpathMatches(".*scala-library-2.10.*"))
+    @enableIf(classpathMatches(".*scala-library-2.10.*".r))
     implicit class FlatMapForTailRec[A](underlying: TailRec[A]) {
       final def flatMap[B](f: A => TailRec[B]): TailRec[B] = {
         tailcall(f(underlying.result))

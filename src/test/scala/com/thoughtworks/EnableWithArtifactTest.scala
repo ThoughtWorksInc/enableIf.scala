@@ -16,7 +16,7 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
     object ExplicitQ {
 
-      @enableIf(classpathMatchesScalaArtifact("quasiquotes", "2.1.1"))
+      @enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("quasiquotes"), "2.1.1"))
       def whichIsEnabled = "good"
     }
     object ImplicitQ {

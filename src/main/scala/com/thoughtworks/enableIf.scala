@@ -7,28 +7,30 @@ import scala.util.matching.Regex
 
 
 object enableIf {
-  private def getRegex(artifactId: String, regex: Regex): String = {
-    s".*${artifactId}-${regex.toString}"
+  private def getRegex(artifactId: String, regex: Regex): Regex = {
+    new Regex(s".*${artifactId}-${regex.toString}")
   }
 
-  private def getRegex(artifactId: String, version: String): String = {
+  private def getRegex(artifactId: String, version: String): Regex = {
     val versionRegex = s"${version.replace(".", "\\.")}.*"
     getRegex(artifactId, new Regex(versionRegex))
   }
 
-  private def getScalaRegex(artifactId: String, regex: Regex): String = {
-    val scalaMajorVersion = scala.util.Properties.versionNumberString.split("\\.")
-      .take(2).mkString(".")
-    getRegex(s"${artifactId}_${scalaMajorVersion}", regex)
+  def crossScalaBinaryVersion(artifactId: String): String = {
+    val scalaBinaryVersion = scala.util.Properties
+      .versionNumberString
+      .split("\\.").take(2)
+      .mkString(".")
+    s"${artifactId}_${scalaBinaryVersion}"
   }
 
-  private def getScalaRegex(artifactId: String, version: String): String = {
-    val versionRegex = s"${version.replace(".", "\\.")}.*"
-    getScalaRegex(artifactId, new Regex(versionRegex))
+  def crossScalaFullVersion(artifactId: String): String = {
+    val scalaFullVersion = scala.util.Properties.versionNumberString
+    s"${artifactId}_${scalaFullVersion}"
   }
 
-  def classpathMatches(regex: String): Context => Boolean = {
-    c => c.classPath.exists(_.getPath.matches(regex))
+  def classpathContains(regex: Regex): Context => Boolean = {
+    c => c.classPath.exists(_.getPath.contains(regex.toString))
   }
 
   def classpathMatches(regex: Regex): Context => Boolean = {
@@ -41,14 +43,6 @@ object enableIf {
 
   def classpathMatchesArtifact(artifactId: String, version: String): Context => Boolean = {
     classpathMatches(getRegex(artifactId, version))
-  }
-
-  def classpathMatchesScalaArtifact(artifactId: String, regex: Regex): Context => Boolean = {
-    classpathMatches(getScalaRegex(artifactId, regex))
-  }
-
-  def classpathMatchesScalaArtifact(artifactId: String, version: String): Context => Boolean = {
-    classpathMatches(getScalaRegex(artifactId, version))
   }
 
 

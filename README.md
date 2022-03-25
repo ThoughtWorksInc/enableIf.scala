@@ -126,13 +126,13 @@ For breaking API changes of 3rd-party libraries, simply annotate the target meth
 Sometimes, we need to use the regex to match the rest part of a dependency's classpath. For example, `"3\\.2.*".r` below will match `"3.2.0.jar"`.
 ``` scala
 object XYZ {
-  @enableIf(classpathMatchesScalaArtifact("spark-catalyst", "3\\.2.*".r))
+  @enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("spark-catalyst"), "3\\.2.*".r))
   private def getFuncName(f: UnresolvedFunction): String = {
     // For Spark 3.2.x
     f.nameParts.last
   }
   
-  @enableIf(classpathMatchesScalaArtifact("spark-catalyst", "3\\.1.*".r))
+  @enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("spark-catalyst"), "3\\.1.*".r))
   private def getFuncName(f: UnresolvedFunction): String = {
     // For Spark 3.1.x
     f.name.funcName
@@ -155,7 +155,7 @@ If there is a key difference between gpl and non-gpl implementation, the followi
 @enableIf(classpathMatchesArtifact("ffmpeg", "5.0-1.5.7-.*-gpl.jar".r))
 ```
 
-If `classpathMatchesArtifact` or `classpathMatchesScalaArtifact` is not flexible enough for you to identify the specific dependency, please use `classpathMatches`.
+If `classpathMatchesArtifact` is not flexible enough for you to identify the specific dependency, please use `classpathMatches`.
 
 Hints to show the full classpath:
 ``` bash
