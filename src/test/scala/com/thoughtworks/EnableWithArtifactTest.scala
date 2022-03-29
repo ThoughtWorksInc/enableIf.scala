@@ -52,4 +52,20 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
     assert(tenPlusOne.result == 11)
   }
+
+  "Add TailRec.flatMap for Scala 2.10 via classpathContains " in {
+
+    @enableIf(classpathContains("scala-library-2.10."))
+    implicit class FlatMapForTailRec[A](underlying: TailRec[A]) {
+      final def flatMap[B](f: A => TailRec[B]): TailRec[B] = {
+        tailcall(f(underlying.result))
+      }
+    }
+
+    def ten = done(10)
+
+    def tenPlusOne = ten.flatMap(i => done(i + 1))
+
+    assert(tenPlusOne.result == 11)
+  }
 }

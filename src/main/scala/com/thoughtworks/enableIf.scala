@@ -29,8 +29,8 @@ object enableIf {
     s"${artifactId}_${scalaFullVersion}"
   }
 
-  def classpathContains(regex: Regex): Context => Boolean = {
-    c => c.classPath.exists(_.getPath.contains(regex.toString))
+  def classpathContains(classpathPart: String): Context => Boolean = {
+    c => c.classPath.exists(_.getPath.contains(classpathPart))
   }
 
   def classpathMatches(regex: Regex): Context => Boolean = {
