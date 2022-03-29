@@ -34,7 +34,9 @@ object enableIf {
   }
 
   def classpathMatches(regex: Regex): Context => Boolean = {
-    c => c.classPath.exists(_.getPath.matches(regex.toString))
+    c => c.classPath.exists { dep =>
+      regex.pattern.matcher(dep.getPath).matches()
+    }
   }
 
   def classpathMatchesArtifact(artifactId: String, regex: Regex): Context => Boolean = {
