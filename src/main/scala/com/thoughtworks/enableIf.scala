@@ -8,12 +8,12 @@ import scala.util.matching.Regex
 
 object enableIf {
   private def getRegex(artifactId: String, regex: Regex): Regex = {
-    new Regex(s".*${artifactId}-${regex.toString}")
+    new Regex(s".*(${artifactId})-(${regex.toString})", "artifactId", "regex")
   }
 
   private def getRegex(artifactId: String, version: String): Regex = {
     val versionRegex = s"${version.replace(".", "\\.")}.*"
-    getRegex(artifactId, new Regex(versionRegex))
+    new Regex(s".*(${artifactId})-(${versionRegex})", "artifactId", "regex")
   }
 
   def crossScalaBinaryVersion(artifactId: String): String = {
