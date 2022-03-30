@@ -13,14 +13,16 @@ import org.scalatest.matchers.should.Matchers
  */
 class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
   "test the constant regex of classpath" in {
-    assert { classpathRegex.findAllMatchIn("/path/to/scala-library-2.10.8.jar")
-      .exists { m =>
-        "scala-library".equals(m.group(2)) && "2.10.8".equals(m.group(3))
+    assert {
+      "/path/to/scala-library-2.10.8.jar" match {
+        case classpathRegex(_, artifactId, version) =>
+          "scala-library".equals(artifactId) && "2.10.8".equals(version)
       }
     }
-    assert { classpathRegex.findAllMatchIn("/path/to/quasiquotes_2.10-2.1.1.jar")
-      .exists { m =>
-        "quasiquotes_2.10".equals(m.group(2)) && "2.1.1".equals(m.group(3))
+    assert {
+      "/path/to/quasiquotes_2.10-2.1.1.jar" match {
+        case classpathRegex(_, artifactId, version) =>
+          "quasiquotes_2.10".equals(artifactId) && "2.1.1".equals(version)
       }
     }
   }
