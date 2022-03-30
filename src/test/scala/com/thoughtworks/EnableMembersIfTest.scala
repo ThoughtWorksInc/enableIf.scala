@@ -1,6 +1,6 @@
 package com.thoughtworks
 
-import com.thoughtworks.enableIf.{classpathMatchesArtifact, crossScalaBinaryVersion}
+import com.thoughtworks.enableIf.{classpathMatches, classpathMatchesArtifact, crossScalaBinaryVersion}
 import org.scalatest._
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
@@ -52,12 +52,12 @@ class EnableMembersIfTest extends AnyFreeSpec with Matchers {
       def whichIsEnabled = "good"
     }
 
-    @enableMembersIf(classpathMatchesArtifact("scala-library", "2\\.1[123]\\..*".r))
+    @enableMembersIf(classpathMatches(".*scala-library-2\\.1[123]\\..*".r))
     object ShouldDisable1 {
       def whichIsEnabled = "bad"
     }
 
-    @enableMembersIf(classpathMatchesArtifact("scala", "2\\.1[123]\\..*".r))
+    @enableMembersIf(classpathMatches(".*scala-2\\.1[123]\\..*".r))
     object ShouldDisable2 {
       def whichIsEnabled = "bad"
     }

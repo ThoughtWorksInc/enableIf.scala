@@ -12,6 +12,19 @@ import org.scalatest.matchers.should.Matchers
  * @author 沈达 (Darcy Shen) &lt;sadhen@zoho.com&gt;
  */
 class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
+  "test the constant regex of classpath" in {
+    assert { classpathRegex.findAllMatchIn("/path/to/scala-library-2.10.8.jar")
+      .exists { m =>
+        "scala-library".equals(m.group(2)) && "2.10.8".equals(m.group(3))
+      }
+    }
+    assert { classpathRegex.findAllMatchIn("/path/to/quasiquotes_2.10-2.1.1.jar")
+      .exists { m =>
+        "quasiquotes_2.10".equals(m.group(2)) && "2.1.1".equals(m.group(3))
+      }
+    }
+  }
+
   "Test if we are using quasiquotes explicitly" in {
 
     object ExplicitQ {
@@ -20,10 +33,10 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
       def whichIsEnabled = "good"
     }
     object ImplicitQ {
-      @enableIf(classpathMatchesArtifact("scala-library", "2\\.1[123]\\..*".r))
+      @enableIf(classpathMatches(".*scala-library-2\\.1[123]\\..*".r))
       def whichIsEnabled = "bad"
 
-      @enableIf(classpathMatchesArtifact("scala", "2\\.1[123]\\..*".r))
+      @enableIf(classpathMatches(".*scala-2\\.1[123]\\..*".r))
       def whichIsEnabled = "bad"
     }
 
@@ -39,7 +52,7 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
   "Add TailRec.flatMap for Scala 2.10 " in {
 
-    @enableIf(classpathMatchesArtifact("scala-library", "2\\.10.*".r))
+    @enableIf(classpathMatches(".*scala-library-2\\.10.*".r))
     implicit class FlatMapForTailRec[A](underlying: TailRec[A]) {
       final def flatMap[B](f: A => TailRec[B]): TailRec[B] = {
         tailcall(f(underlying.result))

@@ -123,16 +123,16 @@ You can define a `c` parameter because the `enableIf` annotation accepts either 
 ## Enable different code for Apache Spark 3.1.x and 3.2.x
 For breaking API changes of 3rd-party libraries, simply annotate the target method with the artifactId and the version to make it compatible.
 
-Sometimes, we need to use the regex to match the rest part of a dependency's classpath. For example, `"3\\.2.*".r` below will match `"3.2.0.jar"`.
+To distinguish Apache Spark 3.1.x and 3.2.x:
 ``` scala
 object XYZ {
-  @enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("spark-catalyst"), "3\\.2.*".r))
+  @enableIf(classpathMatches(".*spark-catalyst_2\\.\\d+-3\\.2\\..*".r))
   private def getFuncName(f: UnresolvedFunction): String = {
     // For Spark 3.2.x
     f.nameParts.last
   }
   
-  @enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("spark-catalyst"), "3\\.1.*".r))
+  @enableIf(classpathMatches(".*spark-catalyst_2\\.\\d+-3\\.1\\..*".r))
   private def getFuncName(f: UnresolvedFunction): String = {
     // For Spark 3.1.x
     f.name.funcName
@@ -140,22 +140,15 @@ object XYZ {
 }
 ```
 
-The rest part regex could also be used to identify classifiers. Take `"org.bytedeco" % "ffmpeg" % "5.0-1.5.7"` for example:
-
-```
-ffmpeg-5.0-1.5.7-android-arm-gpl.jar
-ffmpeg-5.0-1.5.7-android-arm.jar
-ffmpeg-5.0-1.5.7-android-arm64.jar
-ffmpeg-5.0-1.5.7-linux-arm64-gpl.jar
-...
-```
-
-If there is a key difference between gpl and non-gpl implementation, the following macro (with casual regex) might be used:
+For specific Apache Spark versions:
 ``` scala
-@enableIf(classpathMatchesArtifact("ffmpeg", "5.0-1.5.7-.*-gpl.jar".r))
+@enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("spark-catalyst"), "3.2.1"))
+@enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("spark-catalyst"), "3.1.2"))
 ```
 
-If `classpathMatchesArtifact` is not flexible enough for you to identify the specific dependency, please use `classpathMatches`.
+> NOTICE: `classpathMatchesArtifact` is for classpath without classifiers. For classpath with classifiers like
+> `ffmpeg-5.0-1.5.7-android-arm-gpl.jar`, Please use `classpathMactches` or `classpathContains`.
+
 
 Hints to show the full classpath:
 ``` bash

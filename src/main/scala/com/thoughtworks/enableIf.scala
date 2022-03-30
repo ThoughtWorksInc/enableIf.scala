@@ -7,14 +7,7 @@ import scala.util.matching.Regex
 
 
 object enableIf {
-  private def getRegex(artifactId: String, regex: Regex): Regex = {
-    new Regex(s".*(${artifactId})-(${regex.toString})", "artifactId", "regex")
-  }
-
-  private def getRegex(artifactId: String, version: String): Regex = {
-    val versionRegex = s"${version.replace(".", "\\.")}.*"
-    new Regex(s".*(${artifactId})-(${versionRegex})", "artifactId", "regex")
-  }
+  val classpathRegex = "(.*)/([^/]*)-([^/]*)\\.jar".r
 
   def crossScalaBinaryVersion(artifactId: String): String = {
     val scalaBinaryVersion = scala.util.Properties
@@ -39,12 +32,12 @@ object enableIf {
     }
   }
 
-  def classpathMatchesArtifact(artifactId: String, regex: Regex): Context => Boolean = {
-    classpathMatches(getRegex(artifactId, regex))
-  }
-
   def classpathMatchesArtifact(artifactId: String, version: String): Context => Boolean = {
-    classpathMatches(getRegex(artifactId, version))
+    c => c.classPath.exists { dep =>
+      classpathRegex.findAllMatchIn(dep.getPath).exists { m =>
+        artifactId.equals(m.group(2)) && version.equals(m.group(3))
+      }
+    }
   }
 
 
