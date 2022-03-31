@@ -28,7 +28,7 @@ object enableIf {
 
   def classpathMatches(regex: Regex): Context => Boolean = {
     c => c.classPath.exists { dep =>
-      regex.pattern.matcher(dep.getPath).matches()
+      regex.matches(dep.getPath)
     }
   }
 
