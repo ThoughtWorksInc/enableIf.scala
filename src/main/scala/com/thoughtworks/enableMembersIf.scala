@@ -3,6 +3,8 @@ package com.thoughtworks
 import scala.annotation.StaticAnnotation
 import scala.reflect.internal.annotations.compileTimeOnly
 import scala.reflect.macros.Context
+import scala.util.matching.Regex
+
 
 object enableMembersIf {
 
@@ -20,6 +22,7 @@ object enableMembersIf {
         c.macroApplication
       if (
         c.eval(c.Expr[Boolean](q"""
+          import _root_.com.thoughtworks.enableIf._
           _root_.com.thoughtworks.enableIf.isEnabled(${reify(
             c
           ).tree}, $condition)

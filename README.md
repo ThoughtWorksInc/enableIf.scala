@@ -119,3 +119,41 @@ optimizedBuffer.reduceToSize(1)
 ```
 
 You can define a `c` parameter because the `enableIf` annotation accepts either a `Boolean` expression or a `scala.reflect.macros.Context => Boolean` function. You can extract information from the macro context `c`.
+
+## Enable different code for Apache Spark 3.1.x and 3.2.x
+For breaking API changes of 3rd-party libraries, simply annotate the target method with the artifactId and the version to make it compatible.
+
+To distinguish Apache Spark 3.1.x and 3.2.x:
+``` scala
+object XYZ {
+  @enableIf(classpathMatches(".*spark-catalyst_2\\.\\d+-3\\.2\\..*".r))
+  private def getFuncName(f: UnresolvedFunction): String = {
+    // For Spark 3.2.x
+    f.nameParts.last
+  }
+  
+  @enableIf(classpathMatches(".*spark-catalyst_2\\.\\d+-3\\.1\\..*".r))
+  private def getFuncName(f: UnresolvedFunction): String = {
+    // For Spark 3.1.x
+    f.name.funcName
+  }
+}
+```
+
+For specific Apache Spark versions:
+``` scala
+@enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("spark-catalyst"), "3.2.1"))
+@enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("spark-catalyst"), "3.1.2"))
+```
+
+> NOTICE: `classpathMatchesArtifact` is for classpath without classifiers. For classpath with classifiers like
+> `ffmpeg-5.0-1.5.7-android-arm-gpl.jar`, Please use `classpathMactches` or `classpathContains`.
+
+
+Hints to show the full classpath:
+``` bash
+sbt "show Compile / fullClasspath"
+
+mill show foo.compileClasspath
+```
+
