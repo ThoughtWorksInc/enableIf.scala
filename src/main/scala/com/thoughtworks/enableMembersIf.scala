@@ -5,7 +5,6 @@ import scala.reflect.internal.annotations.compileTimeOnly
 import scala.reflect.macros.Context
 import scala.util.matching.Regex
 
-
 object enableMembersIf {
 
   private[enableMembersIf] object Macros {

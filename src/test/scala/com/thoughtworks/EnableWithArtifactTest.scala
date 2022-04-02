@@ -7,10 +7,9 @@ import scala.util.control.TailCalls._
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
-
-/**
- * @author 沈达 (Darcy Shen) &lt;sadhen@zoho.com&gt;
- */
+/** @author
+  *   沈达 (Darcy Shen) &lt;sadhen@zoho.com&gt;
+  */
 class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
   "test the constant regex of classpath" in {
     assert {
@@ -31,7 +30,12 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
 
     object ExplicitQ {
 
-      @enableIf(classpathMatchesArtifact(crossScalaBinaryVersion("quasiquotes"), "2.1.1"))
+      @enableIf(
+        classpathMatchesArtifact(
+          crossScalaBinaryVersion("quasiquotes"),
+          "2.1.1"
+        )
+      )
       def whichIsEnabled = "good"
     }
     object ImplicitQ {
@@ -41,7 +45,6 @@ class EnableWithArtifactTest extends AnyFreeSpec with Matchers {
       @enableIf(classpathMatches(".*scala-2\\.1[123]\\..*".r))
       def whichIsEnabled = "bad"
     }
-
 
     import ExplicitQ._
     import ImplicitQ._
