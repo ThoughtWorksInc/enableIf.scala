@@ -7,10 +7,9 @@ import scala.util.control.TailCalls._
 import org.scalatest.freespec.AnyFreeSpec
 import org.scalatest.matchers.should.Matchers
 
-
-/**
- * @author 沈达 (Darcy Shen) &lt;sadhen@zoho.com&gt;
- */
+/** @author
+  *   沈达 (Darcy Shen) &lt;sadhen@zoho.com&gt;
+  */
 class EnableWithClasspathTest extends AnyFreeSpec with Matchers {
 
   "enableWithClasspath by regex" in {
