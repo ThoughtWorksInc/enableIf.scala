@@ -3,7 +3,9 @@ organization := "com.thoughtworks.enableIf"
 name := "enableIf"
 
 libraryDependencies ++= {
-  if (VersionNumber(scalaVersion.value).matchesSemVer(SemanticSelector(">=2.13"))) {
+  if (
+    VersionNumber(scalaVersion.value).matchesSemVer(SemanticSelector(">=2.13"))
+  ) {
     Nil
   } else {
     Seq(
@@ -15,7 +17,9 @@ libraryDependencies ++= {
 }
 
 scalacOptions ++= {
-  if (VersionNumber(scalaVersion.value).matchesSemVer(SemanticSelector(">=2.13"))) {
+  if (
+    VersionNumber(scalaVersion.value).matchesSemVer(SemanticSelector(">=2.13"))
+  ) {
     Seq("-Ymacro-annotations")
   } else {
     Nil
